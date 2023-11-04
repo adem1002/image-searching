@@ -1,12 +1,15 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 
-function Navbar() {
+
+function Navbar({setData}) {
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "lofi"
   );
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResult, setSearchResult] = useState("");
+  
 
   const toggleButton = (e) => {
     if (e.target.checked) {
@@ -15,17 +18,66 @@ function Navbar() {
       setTheme("lofi");
     }
   };
+
   useEffect(() => {
     localStorage.setItem("theme", theme);
     const localTheme = localStorage.getItem("theme");
     document.querySelector("html").setAttribute("data-theme", localTheme);
   }, [theme]);
 
+  const handleSearchInputChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearchButtonClick = () => {
+    setSearchResult(searchValue); // Store the search value in the searchResult state
+    console.log("Search Value: " + searchValue);
+
+    // Prepare the JSON data
+    const postData = {
+      sites: [
+        { url: "https://unsplash.com/s/photos/mammal" }
+      ],
+      search_text: searchValue,
+    };
+
+    // Send a POST request to your local API
+    sendPostRequestToAPI(postData);
+  };
+
+  const sendPostRequestToAPI = (postData) => {
+    // Replace 'your-api-url' with the actual URL of your local API
+    fetch("http://127.0.0.1:5000/get_images", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    })
+
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setData(responseJson); // Store the response data in the data state
+
+        // console.log("POST request response:", responseJson);
+        // Handle the response as needed
+      })
+      .catch((error) => {
+        console.error("Error sending POST request:", error);
+      });
+  };
+
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButtonClick();
+    }
+  };
+
   return (
     <div className="navbar bg-base-100">
-      <div className="flex-1 ">
-        <FaCameraRetro className=" text-2xl mr-2 " />
-        <a className=" normal-case text-xl">PADEL</a>
+      <div className="flex-1">
+        <FaCameraRetro className="text-2xl mr-2" />
+        <a className="normal-case text-xl">PADEL</a>
       </div>
       <div className="flex-none gap-2 pr-2">
         <div className="form-control">
@@ -33,13 +85,18 @@ function Navbar() {
             type="text"
             placeholder="Search"
             className="input input-bordered w-36 md:w-auto"
+            value={searchValue}
+            onChange={handleSearchInputChange}
+            onKeyPress={handleEnterKey}
           />
         </div>
+
+
       </div>
 
       <BiSearch
-        onClick={() => console.log("clicked")}
-        className=" text-3xl mr-2 cursor-pointer transition-all duration-300  hover:scale-90"
+        onClick={handleSearchButtonClick}
+        className="text-3xl mr-2 cursor-pointer transition-all duration-300 hover:scale-90"
       />
       <label className="swap swap-rotate ">
         <input type="checkbox" onChange={toggleButton} />
@@ -58,8 +115,17 @@ function Navbar() {
           <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
         </svg>
       </label>
+
+
+
+
+
     </div>
+
   );
 }
 
+// console.log("ll",data)
+
 export default Navbar;
+

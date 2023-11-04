@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 
 function Card({ item, setSelected }) {
+  console.log("hello:",item?.url)
   return (
     <div
       className="h-fit relative group overflow-hidden cursor-pointer"
