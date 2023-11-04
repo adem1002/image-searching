@@ -1,16 +1,17 @@
+/* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 
-function Navbar() {
+function Navbar({ setText, setClicked }) {
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "lofi"
   );
 
   const toggleButton = (e) => {
     if (e.target.checked) {
-      setTheme("dark");
+      setTheme("synthwave");
     } else {
       setTheme("lofi");
     }
@@ -33,12 +34,16 @@ function Navbar() {
             type="text"
             placeholder="Search"
             className="input input-bordered w-36 md:w-auto"
+            onChange={(e) => {
+              setText(e.target.value);
+              setClicked(false);
+            }}
           />
         </div>
       </div>
 
       <BiSearch
-        onClick={() => console.log("clicked")}
+        onClick={() => setClicked(true)}
         className=" text-3xl mr-2 cursor-pointer transition-all duration-300  hover:scale-90"
       />
       <label className="swap swap-rotate ">
