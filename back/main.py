@@ -19,6 +19,7 @@ def extract_images_from_url(url, search_text):
             # print(img.get('alt', ''),"     ",img.get('title', ''))
             if search_text in img.get('alt', '') or search_text in img.get('title', ''):
                 images.append({
+                    
                     'src': img.get('src'),
                     'alt': img.get('alt', ''),
                     'title': img.get('title', ''),
@@ -80,6 +81,7 @@ def get_images():
             # }
             search_result = {
                 'id': i,
+                'website':url,
                 'url': image['src'],
                 'title': image['title'],
                 'description': image['alt'],

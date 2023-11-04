@@ -49,7 +49,7 @@ function Navbar({ setData, setLoading }) {
 
   const toggleButton = (e) => {
     if (e.target.checked) {
-      setTheme("synthwave");
+      setTheme("dark");
     } else {
       setTheme("lofi");
     }

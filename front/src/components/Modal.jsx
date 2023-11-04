@@ -2,6 +2,15 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 function Modal({ selected, setSelected }) {
+  const handleGoToWebsite = (id, url, title) => {
+    // if (!title) {
+    window.open(url, "_blank");
+    // } else {
+    //   const stringWithUnderscores = title.replace(/ /g, "-");
+    //   window.open(url+"/", "_blank");
+    // }
+  };
+
   if (selected == null) {
     return <></>;
   } else {
@@ -32,9 +41,18 @@ function Modal({ selected, setSelected }) {
             }}
             className="bg-white p-4"
           >
-            <h3 className="text-xl font-bold mb-2">hi</h3>
+            <h3 className="text-lg font-semibold mb-2">{selected.title}</h3>
 
-            <button className="btn btn-primary btn-block">
+            <button
+              className="btn btn-primary btn-block"
+              onClick={(e) => {
+                handleGoToWebsite(
+                  selected.id,
+                  selected.website,
+                  selected.title
+                );
+              }}
+            >
               check on website
             </button>
           </motion.div>

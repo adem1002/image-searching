@@ -14,7 +14,7 @@ function Card({ item, setSelected }) {
       />
 
       <div className=" transition-all duration-300 group-hover:bottom-0  group-hover:opacity-100 flex absolute -bottom-32  w-full h-full  bg-black/50  opacity-0 justify-center items-center">
-        <p className="text-white">{item.title}</p>
+        <p className="text-white">Click for more</p>
       </div>
     </div>
   );
