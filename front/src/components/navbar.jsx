@@ -1,13 +1,51 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
+import { useQuery } from "@tanstack/react-query";
 
-function Navbar({ setText, setClicked }) {
+function Navbar({ setData, setLoading }) {
+  const [text, setText] = useState("");
+  const [clicked, setClicked] = useState(false);
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "lofi"
   );
+
+  async function getImages() {
+    const postData = {
+      sites: [
+        { url: "https://unsplash.com/s/photos/mammal" },
+        { url: "https://unsplash.com/s/photos/animals" },
+        { url: "https://unsplash.com/s/photos/cat" },
+        // { url: "https://unsplash.com/s/photos/dog" },
+        // { url: "https://unsplash.com/s/photos/savana-animals" },
+        // { url: "https://unsplash.com/s/photos/farm-animals" },
+        // { url: "https://unsplash.com/s/photos/anaconda" },
+        // { url: "https://unsplash.com/s/photos/amazon-animals" },
+        // { url: "https://unsplash.com/s/photos/amazon-animals" },
+      ],
+      search_text: text,
+    };
+
+    const response = await fetch("http://127.0.0.1:5000/get_images", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+    return response.json();
+  }
+
+  useEffect(() => {
+    getImages().then((res) => {
+      setData(res);
+      setLoading(false);
+    });
+  }, [clicked]);
 
   const toggleButton = (e) => {
     if (e.target.checked) {
@@ -36,14 +74,16 @@ function Navbar({ setText, setClicked }) {
             className="input input-bordered w-36 md:w-auto"
             onChange={(e) => {
               setText(e.target.value);
-              setClicked(false);
             }}
           />
         </div>
       </div>
 
       <BiSearch
-        onClick={() => setClicked(true)}
+        onClick={() => {
+          setClicked(!clicked);
+          setLoading(true);
+        }}
         className=" text-3xl mr-2 cursor-pointer transition-all duration-300  hover:scale-90"
       />
       <label className="swap swap-rotate ">
