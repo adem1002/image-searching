@@ -36,6 +36,8 @@ def extract_images_from_url(url, search_text):
         return images
     except Exception as e:
         return []
+    
+
 
 def save_image(image_url, filename):
     try:
