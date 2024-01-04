@@ -36,7 +36,14 @@ function Navbar({setData}) {
     // Prepare the JSON data
     const postData = {
       sites: [
-        { url: "https://unsplash.com/s/photos/mammal" }
+        { url: "https://unsplash.com/s/photos/mammal" },
+        { url: "https://unsplash.com/s/photos/animals" },
+        { url: "https://unsplash.com/s/photos/cat" },
+        { url: "https://unsplash.com/s/photos/dog" },
+        { url: "https://unsplash.com/s/photos/savana-animals" },
+        { url: "https://unsplash.com/s/photos/farm-animals" },
+        { url: "https://unsplash.com/s/photos/anaconda" },
+        { url: "https://unsplash.com/s/photos/amazon-animals" }
       ],
       search_text: searchValue,
     };

@@ -14,36 +14,58 @@ def extract_images_from_url(url, search_text):
         soup = BeautifulSoup(response.text, 'html.parser')
         
         images = []
-        for img in soup.find_all('img'):
-            # print(img.get('alt', ''))
-            # print(img.get('alt', ''),"     ",img.get('title', ''))
-            if search_text in img.get('alt', '') or search_text in img.get('title', ''):
+
+        if search_text in soup.title.string:
+            # If the string is found, extract image URLs
+            for img in soup.find_all('img'):
                 images.append({
-                    'src': img.get('src'),
-                    'alt': img.get('alt', ''),
-                    'title': img.get('title', ''),
-                })
-        for link in soup.find_all('a', href=True):
-            if search_text in link['href']:
-                img_tag = link.find('img')
-                if img_tag:
-                    images.append({
-                        'src': img_tag.get('src', ''),
-                        'alt': img_tag.get('alt', ''),
-                        'title': link['href'],
+                        'src': img.get('src'),
+                        'alt': img.get('alt', ''),
+                        'title': img.get('title', ''),
                     })
+        else:
+            for img in soup.find_all('img'):
+                
+                if search_text in img.get('alt', '') or search_text in img.get('title', ''):
+                    images.append({
+                        'src': img.get('src'),
+                        'alt': img.get('alt', ''),
+                        'title': img.get('title', ''),
+                    })
+            if images==[]:
+                paragraphs = soup.find_all("p", text=lambda text: search_text in text)
+                for paragraph in paragraphs:   
+                    if paragraph:
+                        for img in paragraph.find_previous_siblings("img"):
+                            images.append({
+                                'src': img.get('src'),
+                                'alt': img.get('alt', ''),
+                                'title': img.get('title', ''),
+                            })
+                        for img in paragraph.find_next_siblings("img"):
+                            images.append({
+                                'src': img.get('src'),
+                                'alt': img.get('alt', ''),
+                                'title': img.get('title', ''),
+                            })
+            
+        # for link in soup.find_all('a', href=True):
+        #     if search_text in link['href']:
+        #         img_tag = link.find('img')
+        #         if img_tag:
+        #             images.append({
+        #                 'src': img_tag.get('src', ''),
+        #                 'alt': img_tag.get('alt', ''),
+        #                 'title': link['href'],
+        #             })
         return images
     except Exception as e:
         return []
 
 def save_image(image_url, filename):
     try:
-        original_image_url = image_url.replace('/220px-', '/')
-        print("save")
-        print(image_url)
-
-        print(requests.get(original_image_url))
-        response = requests.get(original_image_url)
+        
+        response = requests.get(image_url)
         response.raise_for_status()
         image_path = os.path.join('images', filename)
         with open(image_path, 'wb') as file:
@@ -55,7 +77,7 @@ def save_image(image_url, filename):
 def get_images():
     print("kk")
     data = request.get_json()
-    print(data)
+    
     sites = data.get('sites', [])
     search_text = data.get('search_text')
 
@@ -66,7 +88,7 @@ def get_images():
     i=0
     for site in sites:
         url = site.get('url')
-        print("lo")
+        
         images = extract_images_from_url(url, search_text)
         for image in images:
             i+=1
@@ -84,6 +106,7 @@ def get_images():
                 'title': image['title'],
                 'description': image['alt'],
                 'tags': ["Mountains", "Aesthetic", "Pretty", "Scenic", "Rugged"],  # Replace with your own tags
+                'source_website': url
             }
             search_results.append(search_result)
             # save_image(image['src'], f'{image["alt"]}{i}.jpg')
