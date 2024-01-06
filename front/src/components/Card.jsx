@@ -9,8 +9,8 @@ function Card({ item, setSelected }) {
     >
       <motion.img
         layoutId={`card-${item.id}`}
-        className="w-full z-20"
-        src={""}
+        className="w-full z-20   "
+        src={item.url}
       />
 
       <div className=" transition-all duration-300 group-hover:bottom-0  group-hover:opacity-100 flex absolute -bottom-32  w-full h-full  bg-black/50  opacity-0 justify-center items-center">
