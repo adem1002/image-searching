@@ -7,7 +7,6 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { tailChase } from "ldrs";
 
 function Images({ setSelected, data, loading }) {
-  console.log(data);
   tailChase.register();
 
   if (loading)

@@ -1,13 +1,34 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 
-export default function Tab() {
+export default function Tab({ setOpenUploader, setData }) {
   const [file, setFile] = useState({
     selectedFile: null,
   });
 
   const [dragActive, setDragActive] = useState(false);
   const [msg, setMsg] = useState("");
+
+  async function getImages() {
+    const postData = new FormData();
+    postData.append("file", file.selectedFile);
+
+    const response = await fetch("http://127.0.0.1:5000/similar_images", {
+      method: "POST",
+      body: postData,
+    });
+    return response.json();
+  }
+  useEffect(() => {
+    if (file.selectedFile != null) {
+      getImages().then((res) => {
+        setData(res);
+        console.log(res);
+      });
+    }
+  }, [file]);
 
   const checkFileType = (e, eventType) => {
     let extension;
@@ -56,6 +77,7 @@ export default function Tab() {
     if (e.target.files && e.target.files[0]) {
       checkSize(e);
       // checkFileType(e);
+      // setOpenUploader(false);
     }
   };
 
@@ -75,6 +97,7 @@ export default function Tab() {
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       checkSize(e, "drop");
+      // setOpenUploader(false);
       // checkFileType(e, "drop");
     }
   };

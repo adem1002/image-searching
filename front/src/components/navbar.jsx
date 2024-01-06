@@ -70,7 +70,9 @@ function Navbar({ setData, setLoading }) {
 
   return (
     <div>
-      {openUploader ? <Uploader setOpenUploader={setOpenUploader} /> : null}
+      {openUploader ? (
+        <Uploader setOpenUploader={setOpenUploader} setData={setData} />
+      ) : null}
 
       <div className="">
         <div className="flex justify-between py-2 px-3  ">

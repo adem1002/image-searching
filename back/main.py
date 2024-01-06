@@ -1,9 +1,12 @@
+from datetime import datetime
 from flask import Flask, request, jsonify
 from bs4 import BeautifulSoup
 from flask_cors import CORS
 import requests
 import os
-
+import cv2
+from methods import *
+from store import *
 
 app = Flask(__name__)
 CORS(app)
@@ -136,6 +139,59 @@ def get_images():
         search_results.append(search_result)
         # save_image(image['src'], f'{image["alt"]}{i}.jpg')
     return jsonify({"search_results": search_results})
+
+
+# @app.route('/search', methods=['POST'])
+# def search():
+#     if 'image' not in request.files:
+#         abort(400, "No image provided in the request")
+#     uploaded_file = request.files['image']
+#     if 'size' not in request.files:
+#         number = None
+#     else:
+#         number = request.files['size']
+#     if uploaded_file.filename == '':
+#         abort(400, "No selected file")
+#     upload_path = os.path.join(tmp_folder, f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{uploaded_file.filename}")
+#     uploaded_file.save(upload_path)
+#     return jsonify(controler.search(upload_path, number=number))
+
+@app.route("/similar_images", methods=["POST"])
+def similar_images():
+    print("dkhal")
+    file = request.files["file"]
+    print(file)
+    if file.filename == "":
+        return jsonify({"error": "Image not found"}), 404
+    upload_path = os.path.join("tmp", f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{file.filename}")
+    file.save(upload_path)
+    req_img = cv2.imread(upload_path)
+    descriptor = color_method(req_img)
+    images = read_all_images()
+    distances = []
+    for image in images:
+        distances.append((image["id"],image["path"], distance(descriptor, image["color_descriptor"])))
+    distances.sort(key=lambda x: x[1])
+    search_results = []
+    
+    for img in distances[:10]:
+ 
+        url = img[1]
+
+        print(url)
+        search_result = {
+            "id": img[0],
+            "search_text": " ",
+            "website":"",
+            "url": url,
+            "title": "",
+            "description": "",
+            "choix": 0,
+        }
+        search_results.append(search_result)
+     
+    return jsonify({"search_results": search_results})
+
 
 
 if __name__ == "__main__":

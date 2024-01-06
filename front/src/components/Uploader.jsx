@@ -1,7 +1,7 @@
 import Tab from "./Tab";
 import "./style.css";
 // eslint-disable-next-line react/prop-types
-export default function Uploader({ setOpenUploader }) {
+export default function Uploader({ setOpenUploader, setData }) {
   const handleModalClick = (e) => {
     // Stop the click event from propagating to the outer modal div
     e.stopPropagation();
@@ -19,7 +19,7 @@ export default function Uploader({ setOpenUploader }) {
           Upload an image or use signature-box to sign
         </p>
         <div className="Tabs">
-          <Tab />
+          <Tab setOpenUploader={setOpenUploader} setData={setData} />
         </div>
       </div>
     </div>
