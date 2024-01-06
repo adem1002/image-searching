@@ -15,6 +15,7 @@ def form_method(image):
 def get_contours(image, acceptable_size=0.8):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     ret, thresholded_img = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY) 
+    # edges = cv2.Canny(image, 50, 150)
 
     contours, _ = cv2.findContours(thresholded_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     largest_contour = max(contours, key=cv2.contourArea)

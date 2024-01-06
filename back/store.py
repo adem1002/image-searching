@@ -90,7 +90,7 @@ def process_folder(folder_path):
                 insert_image(file_path, color_descriptor, form_descriptors)
 
 # if __name__ == '__main__':
-#     create_database()
-#     process_folder('images')
+    # create_database()
+    # process_folder('images')
         
     

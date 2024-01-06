@@ -19,7 +19,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
-    "react-responsive-masonry": "^2.1.7"
+    "react-responsive-masonry": "^2.1.7",
+    "vite-plugin-require": "^1.1.14"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

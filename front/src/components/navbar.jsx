@@ -13,6 +13,7 @@ function Navbar({ setData, setLoading }) {
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "lofi"
   );
   const [openUploader, setOpenUploader] = useState(false);
+  const [img, setImg] = useState(null);
 
   async function getImages() {
     const postData = {
@@ -48,6 +49,7 @@ function Navbar({ setData, setLoading }) {
   }
 
   useEffect(() => {
+    setImg(null);
     getImages().then((res) => {
       setData(res);
       setLoading(false);
@@ -69,9 +71,13 @@ function Navbar({ setData, setLoading }) {
   };
 
   return (
-    <div>
+    <div className=" ">
       {openUploader ? (
-        <Uploader setOpenUploader={setOpenUploader} setData={setData} />
+        <Uploader
+          setOpenUploader={setOpenUploader}
+          setData={setData}
+          setImg={setImg}
+        />
       ) : null}
 
       <div className="">
@@ -145,6 +151,19 @@ function Navbar({ setData, setLoading }) {
               setOpenUploader(true);
             }}
           />
+        </div>
+        <div className=" pt-4   mx-8">
+          {img ? (
+            <h2 className=" font-bold text-3xl  my-4 ">Visual search</h2>
+          ) : null}
+
+          {img ? (
+            <img
+              className="w-[200px] h-[200px] object-contain border-4 border-white  "
+              src={URL.createObjectURL(img)}
+              alt=""
+            />
+          ) : null}
         </div>
       </div>
     </div>

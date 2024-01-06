@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 
-export default function Tab({ setOpenUploader, setData }) {
+export default function Tab({ setOpenUploader, setData, setImg }) {
   const [file, setFile] = useState({
     selectedFile: null,
   });
@@ -26,6 +26,7 @@ export default function Tab({ setOpenUploader, setData }) {
       getImages().then((res) => {
         setData(res);
         console.log(res);
+        setImg(file.selectedFile);
       });
     }
   }, [file]);
@@ -77,7 +78,6 @@ export default function Tab({ setOpenUploader, setData }) {
     if (e.target.files && e.target.files[0]) {
       checkSize(e);
       // checkFileType(e);
-      // setOpenUploader(false);
     }
   };
 

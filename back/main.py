@@ -141,42 +141,30 @@ def get_images():
     return jsonify({"search_results": search_results})
 
 
-# @app.route('/search', methods=['POST'])
-# def search():
-#     if 'image' not in request.files:
-#         abort(400, "No image provided in the request")
-#     uploaded_file = request.files['image']
-#     if 'size' not in request.files:
-#         number = None
-#     else:
-#         number = request.files['size']
-#     if uploaded_file.filename == '':
-#         abort(400, "No selected file")
-#     upload_path = os.path.join(tmp_folder, f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{uploaded_file.filename}")
-#     uploaded_file.save(upload_path)
-#     return jsonify(controler.search(upload_path, number=number))
+
 
 @app.route("/similar_images", methods=["POST"])
 def similar_images():
-    print("dkhal")
+
     file = request.files["file"]
-    print(file)
+   
     if file.filename == "":
         return jsonify({"error": "Image not found"}), 404
     upload_path = os.path.join("tmp", f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{file.filename}")
     file.save(upload_path)
     req_img = cv2.imread(upload_path)
-    descriptor = color_method(req_img)
+    descriptor = form_method(req_img)
     images = read_all_images()
     distances = []
     for image in images:
-        distances.append((image["id"],image["path"], distance(descriptor, image["color_descriptor"])))
-    distances.sort(key=lambda x: x[1])
+        distances.append((image["id"],image["path"], distance_hausdorff(descriptor, image["form_descriptors"])))
+    distances.sort(key=lambda x: x[2])
     search_results = []
     
-    for img in distances[:10]:
- 
-        url = img[1]
+    for img in distances[:20]:
+        name = img[1].split("\\")[-1]
+        url = fr"../../../images/{name}"
+
 
         print(url)
         search_result = {
